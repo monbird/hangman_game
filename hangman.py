@@ -6,8 +6,8 @@
 # - no matter if the player wins or loses, they can choose to start a new game or exit the current one
 
 
-# import the random library
 import random
+
 
 # function that picks a random word from a list of words from the SOWPODS dictionary
 def pick_random_word():
@@ -114,7 +114,7 @@ def play_hangman():
     play_again = ""
     # check for valid input, ask until valid
     while play_again not in ("1", "2"):
-        play_again = input("To play press '1', to exit press '2'. ")
+        play_again = input("To play press '1', to exit press '2': ")
 
     # if want to play - resume the game
     if play_again == "1":
@@ -125,4 +125,5 @@ def play_hangman():
         print("See you soon!")
 
 
-play_hangman()
+if __name__ == '__main__':
+    play_hangman()

@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Hangman</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link href="prism.css" rel="stylesheet" type="text/css"/>
+        <link href="style.css" rel="stylesheet" type="text/css"/>
+        <link rel="icon" type="image/png" href="./favicon.jpg">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    </head>
+    <body data-spy="scroll" data-target="#navbar" data-offset="200">
+        <nav id="navbar">
+            <header>Hangman<br/>Game<br>Documentation</header>
+            <ul>
+                <li><a class="nav-link" href="#game_rules" rel="internal">Game rules</a></li>
+                <li><a class="nav-link" href="#program_flow" rel="internal">Program flow</a></li>
+                <li><a class="nav-link" href="#sample_run" rel="internal">Sample run</a></li>
+                <li><a class="nav-link" href="#source_code" rel="internal">Source code</a></li>
+            </ul>
+        </nav>
+        <main id="main-doc">
+            <h1>Hangman</h1>
+            <section id="game_rules">
+                <header>Game rules:</header>
+                <article>
+                    <p>Hangman is a popular word guessing game where the player attempts to build a missing word by
+                        guessing one letter at a time.</p>
+                    <ul>
+                        <li>The program randomly generates a secret word and indicates its length with
+                            according number of underscores</li>
+                        <li>The player guesses one letter at a time </li>
+                        <li>After 6 incorrect guesses the player loses and the game ends</li>
+                        <li>The game also ends if the player correctly identifies all the letters of the secret word</li>
+                        <li>Player is not penalized for guessing a letter they already tried</li>
+                        <li>Regardless of the final result player can choose to start a new game or finish & exit</li>
+                    </ul>
+                </article>
+            </section>
+            <section id="program_flow">
+                <header>Program flow:</header>
+                <article>
+                    <p>The following flow chart has been created and used as a basis for designing the program logic.</p>
+                    <img src="./hangman.svg" alt="program flow diagram">
+                </article>
+            </section>
+            <section id="sample_run">
+                <header>Sample run:</header>
+                <article>
+                    <p>Here is what the user sees when they run the Hangman program. The following example game run
+                        results in player losing the game:</p>
+                    <pre><code class="language-html">
+
+        Welcome to Hangman!
+        This is your secret word:
+        _ _ _ _ _ _
+        Guess a letter: e
+        _ _ _ _ E _
+        Guess a letter: t
+        _ _ T _ E _
+        Guess a letter: a
+        A _ T _ E A
+        Guess a letter: o
+        No such letter! Try a different one.
+        You have 5 (incorrect) guesses left.
+        Guess a letter: n
+        No such letter! Try a different one.
+        You have 4 (incorrect) guesses left.
+        Guess a letter: s
+        No such letter! Try a different one.
+        You have 3 (incorrect) guesses left.
+        Guess a letter: r
+        No such letter! Try a different one.
+        You have 2 (incorrect) guesses left.
+        Guess a letter: d
+        No such letter! Try a different one.
+        You have 1 (incorrect) guesses left.
+        Guess a letter: l
+        A L T _ E A
+        Guess a letter: m
+        No such letter! Try a different one.
+        You have 0 (incorrect) guesses left.
+        Guess a letter: p
+        You lost! You have reached the maximum number of incorrect guesses (6).
+        The secret word was --> ALTHEA <--
+        Why don't you try again? :)
+        To play press '1', to exit press '2': 2
+        See you soon!
+
+                    </code></pre>
+                </article>
+            </section>
+            <section id="source_code">
+                <header>Source code:</header>
+                <article>
+                    <p>In a new text editor window, copy and paste the following source code and save it as
+                        hangman_game.py. Then run the program in the terminal.</p>
+                    <pre><code class="language-python">
+
+        # ------------------------------------->     GAME     <-------------------------------------
+
+        import random
+
+
+        # function that picks a random word from a list of words from the SOWPODS dictionary
+        def pick_random_word():
+            with open('sowpods_dict.txt', 'r') as f:
+                # read all words and save them in a list
+                list_of_words = f.readlines()
+
+            dict_size = len(list_of_words)
+            # generate random number
+            random_num = random.randint(0, dict_size + 1)
+            # take the word and remove any whitespaces
+            random_word = list_of_words[random_num].strip()
+
+            return random_word
+
+        # main function of the game
+        def play_hangman():
+
+            # generate random word and find it's length
+            secret_word = pick_random_word()
+            secret_word_length = len(secret_word)
+
+            # for each letter in random word add a space (for better game visual effect and later comparison purposes)
+            secret_word_with_ending_spaces = ""
+            for letter in secret_word:
+                secret_word_with_ending_spaces += letter + " "
+
+            # variables initialization
+            max_num_of_guesses = 6
+            guesses_counter = 0
+            user_word_list = []
+            user_wrong_letters = []
+
+            # first filling up of the user guessing list with underscores to indicate the length of the secret word
+            for i in range(secret_word_length):
+                user_word_list.append("_ ")
+
+            # joining into string to remove square brackets
+            user_word_str = "".join(user_word_list)
+
+            # welcome into the game and introduce length of the unknown secret word
+            print("Welcome to Hangman!\nThis is your secret word:")
+            print(user_word_str)
+
+            # game logic - as long as user word isn't matching secret word and number of incorrect guesses has not be exceed
+            # keep asking user for a letter
+            while user_word_str != secret_word_with_ending_spaces and guesses_counter <= max_num_of_guesses:
+                user_letter = input("Guess a letter: ").upper()
+
+                # validating user input - only letters, if wrong input - ask again
+                if not user_letter.isalpha():
+                    print("Only letters please!")
+                    continue
+
+                # validating user input - only one letter at a time, if wrong input - ask again
+                elif len(user_letter) > 1:
+                    print("Only one letter at a time.")
+                    continue
+
+                # check if user guessed that letter already, if yes, ask again for a new one
+                elif user_letter in user_word_str:
+                    print("You've tried this letter already. Choose a different one.")
+                    continue
+
+                # check if the guessed letter is in secret word
+                elif user_letter in secret_word:
+                    # when it is - check it's all positions in secret word
+                    letter_indices_in_sw = [i for i, letter in enumerate(secret_word) if letter == user_letter]
+
+                    # overwriting the underscores with correctly guessed letters
+                    for elem in letter_indices_in_sw:
+                        user_word_list[elem] = user_letter + " "
+
+                    # joining into string to remove square brackets and showing the updated word
+                    user_word_str = "".join(user_word_list)
+                    print(user_word_str)
+
+                # check if user is trying to guess the incorrect letter again, if yes - ask for new letter
+                elif user_letter in user_wrong_letters:
+                    print("You've tried this letter before and it's not there just trust me.")
+                    continue
+
+                # at this point it is known that guessed letter is not in the secret word
+                else:
+                    # hence increase the incorrect guess counter and make a note of that letter
+                    guesses_counter += 1
+                    user_wrong_letters.append(user_letter)
+
+                    # if the user still have moves/chances print according message and show how many more incorrect guesses
+                    # he/she can make
+                    if guesses_counter <= max_num_of_guesses:
+                        print("No such letter! Try a different one.\nYou have {} (incorrect) guesses left.".format(
+                            max_num_of_guesses - guesses_counter))
+
+            # when user exceeds the amount of guesses he looses and appropriate message is shown + ask if want to play again
+            if guesses_counter > max_num_of_guesses:
+                print("You lost! You have reached the maximum number of incorrect guesses ({}).\nThe secret word was --> {} "
+                      "<--\nWhy don't you try again? :)".format(max_num_of_guesses, secret_word))
+            # otherwise he wins and so appropriate message is shown + ask if want to play again
+            else:
+                print("Congratulations, you won!\nFancy playing one more time?")
+
+            # check if user want to play again
+            play_again = ""
+            # check for valid input, ask until valid
+            while play_again not in ("1", "2"):
+                play_again = input("To play press '1', to exit press '2'. ")
+
+            # if want to play - resume the game
+            if play_again == "1":
+                print("\n--------------------------\n")
+                return play_hangman()
+            # otherwise say goodbye and end the game
+            else:
+                print("See you soon!")
+
+
+        if __name__ == '__main__':
+            play_hangman()
+
+                    </code></pre>
+                </article>
+            </section>
+        </main>
+        <script src="./prism.js"></script>
+    </body>
+</html>
