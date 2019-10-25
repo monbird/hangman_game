@@ -63,38 +63,118 @@
                         results in player losing the game:</p>
                     <pre><code class="language-html">
 
-        Welcome to Hangman!
+        Welcome to Hangman! Guess the word before your man gets hung!
+        _______________
+          | /       |
+          |/        |
+          |
+          |
+          |
+          |
+          |
+          |
+        =====
         This is your secret word:
-        _ _ _ _ _ _
+        _ _ _ _ _ _ _ _
         Guess a letter: e
-        _ _ _ _ E _
-        Guess a letter: t
-        _ _ T _ E _
+        _ _ E _ _ _ _ _
         Guess a letter: a
-        A _ T _ E A
-        Guess a letter: o
+        _______________
+          | /       |
+          |/        |
+          |         O
+          |
+          |
+          |
+          |
+          |
+        =====
         No such letter! Try a different one.
-        You have 5 (incorrect) guesses left.
         Guess a letter: n
+        _ _ E _ _ _ N _
+        Guess a letter: o
+        _______________
+          | /       |
+          |/        |
+          |         O
+          |         |
+          |         |
+          |
+          |
+          |
+        =====
         No such letter! Try a different one.
-        You have 4 (incorrect) guesses left.
-        Guess a letter: s
-        No such letter! Try a different one.
-        You have 3 (incorrect) guesses left.
-        Guess a letter: r
-        No such letter! Try a different one.
-        You have 2 (incorrect) guesses left.
-        Guess a letter: d
-        No such letter! Try a different one.
-        You have 1 (incorrect) guesses left.
         Guess a letter: l
-        A L T _ E A
+        _ _ E L _ _ N _
         Guess a letter: m
+        _______________
+          | /       |
+          |/        |
+          |         O
+          |       __|
+          |         |
+          |
+          |
+          |
+        =====
         No such letter! Try a different one.
-        You have 0 (incorrect) guesses left.
-        Guess a letter: p
-        You lost! You have reached the maximum number of incorrect guesses (6).
-        The secret word was --> ALTHEA <--
+        Guess a letter: r
+        _______________
+          | /       |
+          |/        |
+          |         O
+          |       __|__
+          |         |
+          |
+          |
+          |
+        =====
+        No such letter! Try a different one.
+        Guess a letter: a
+        You've tried this letter before and it's not there just trust me.
+        Guess a letter: t
+        _______________
+          | /       |
+          |/        |
+          |         O
+          |       __|__
+          |         |
+          |        /
+          |
+          |
+        =====
+        No such letter! Try a different one.
+        Guess a letter: c
+        C _ E L _ _ N _
+        Guess a letter: h
+        C H E L _ _ N _
+        Guess a letter: s
+        _______________
+          | /       |
+          |/        |
+          |         O
+          |       __|__
+          |         |
+          |        / \
+          |
+          |
+        =====
+        No such letter! Try a different one.
+        Guess a letter: i
+        C H E L _ I N _
+        Guess a letter: u
+        _______________
+          | /       |
+          |/        |
+          |         X
+          |       __|__
+          |         |
+          |        / \
+          |
+          |
+        =====
+        You lost! You have reached the maximum number of incorrect guesses.
+        The secret word was --> CHELPING <--
         Why don't you try again? :)
         To play press '1', to exit press '2': 2
         See you soon!
@@ -105,13 +185,34 @@
             <section id="source_code">
                 <header>Source code:</header>
                 <article>
-                    <p>In a new text editor window, copy and paste the following source code and save it as
-                        hangman_game.py. Then run the program in the terminal.</p>
+                    <p>This section contains the source code of the game along with its comments.</p>
                     <pre><code class="language-python">
 
         # ------------------------------------->     GAME     <-------------------------------------
 
         import random
+
+
+        # hangman drawing function; depending on number of incorrect guesses user has made appropriate message is shown
+        def draw_hangman(num_of_incr_guesses):
+            options = {
+                0: "_______________\n  | /       |  \n  |/        |\n  |\n  |\n  |\n  |\n  |\n  |\n=====",
+                1: "_______________\n  | /       |  \n  |/        |\n  |         O\n  |\n  |\n  |\n  |\n  |\n=====",
+                2: "_______________\n  | /       |  \n  |/        |\n  |         O\n  |         |\n  |         |\n  |\n  |\n  "
+                   "|\n=====",
+                3: "_______________\n  | /       |  \n  |/        |\n  |         O\n  |       __|\n  |         |\n  |\n  |\n  "
+                   "|\n=====",
+                4: "_______________\n  | /       |  \n  |/        |\n  |         O\n  |       __|__\n  |         |\n  |\n  "
+                   "|\n  |\n=====",
+                5: "_______________\n  | /       |  \n  |/        |\n  |         O\n  |       __|__\n  |         |\n  |      "
+                   "  /\n  |\n  |\n=====",
+                6: "_______________\n  | /       |  \n  |/        |\n  |         O\n  |       __|__\n  |         |\n  |      "
+                   "  / \ \n  |\n  |\n=====",
+                7: "_______________\n  | /       |  \n  |/        |\n  |         X\n  |       __|__\n  |         |\n  |      "
+                   "  / \ \n  |\n  |\n=====",
+            }
+
+            print(options[num_of_incr_guesses])
 
 
         # function that picks a random word from a list of words from the SOWPODS dictionary
@@ -127,6 +228,7 @@
             random_word = list_of_words[random_num].strip()
 
             return random_word
+
 
         # main function of the game
         def play_hangman():
@@ -154,7 +256,9 @@
             user_word_str = "".join(user_word_list)
 
             # welcome into the game and introduce length of the unknown secret word
-            print("Welcome to Hangman!\nThis is your secret word:")
+            print("Welcome to Hangman! Guess the word before your man gets hung!")
+            draw_hangman(guesses_counter)
+            print("This is your secret word:")
             print(user_word_str)
 
             # game logic - as long as user word isn't matching secret word and number of incorrect guesses has not be exceed
@@ -201,16 +305,17 @@
                     guesses_counter += 1
                     user_wrong_letters.append(user_letter)
 
-                    # if the user still have moves/chances print according message and show how many more incorrect guesses
-                    # he/she can make
+                    # if the user still have moves print according message and draw a hangman
                     if guesses_counter <= max_num_of_guesses:
-                        print("No such letter! Try a different one.\nYou have {} (incorrect) guesses left.".format(
-                            max_num_of_guesses - guesses_counter))
+                        draw_hangman(guesses_counter)
+                        print("No such letter! Try a different one.")
 
-            # when user exceeds the amount of guesses he looses and appropriate message is shown + ask if want to play again
+            # when user exceeds the amount of incorrect guesses he looses; an appropriate message is shown and a dead hangman
+            # is drawn; finally ask if want to play again
             if guesses_counter > max_num_of_guesses:
-                print("You lost! You have reached the maximum number of incorrect guesses ({}).\nThe secret word was --> {} "
-                      "<--\nWhy don't you try again? :)".format(max_num_of_guesses, secret_word))
+                draw_hangman(guesses_counter)
+                print("You lost! You have reached the maximum number of incorrect guesses.\nThe secret word was --> {} "
+                      "<--\nWhy don't you try again? :)".format(secret_word))
             # otherwise he wins and so appropriate message is shown + ask if want to play again
             else:
                 print("Congratulations, you won!\nFancy playing one more time?")
@@ -219,11 +324,11 @@
             play_again = ""
             # check for valid input, ask until valid
             while play_again not in ("1", "2"):
-                play_again = input("To play press '1', to exit press '2'. ")
+                play_again = input("To play press '1', to exit press '2': ")
 
             # if want to play - resume the game
             if play_again == "1":
-                print("\n--------------------------\n")
+                print("\n---------------------------->>>  NEW GAME <<<----------------------------\n")
                 return play_hangman()
             # otherwise say goodbye and end the game
             else:

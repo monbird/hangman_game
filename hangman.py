@@ -5,8 +5,31 @@
 # - if the user guesses a letter they already guessed (good or bad), they are not penalized - they can guess again
 # - no matter if the player wins or loses, they can choose to start a new game or exit the current one
 
+# ------------------------------------->     GAME     <-------------------------------------
 
 import random
+
+
+# hangman drawing function; depending on number of incorrect guesses user has made appropriate message is shown
+def draw_hangman(num_of_incr_guesses):
+    options = {
+        0: "_______________\n  | /       |  \n  |/        |\n  |\n  |\n  |\n  |\n  |\n  |\n=====",
+        1: "_______________\n  | /       |  \n  |/        |\n  |         O\n  |\n  |\n  |\n  |\n  |\n=====",
+        2: "_______________\n  | /       |  \n  |/        |\n  |         O\n  |         |\n  |         |\n  |\n  |\n  "
+           "|\n=====",
+        3: "_______________\n  | /       |  \n  |/        |\n  |         O\n  |       __|\n  |         |\n  |\n  |\n  "
+           "|\n=====",
+        4: "_______________\n  | /       |  \n  |/        |\n  |         O\n  |       __|__\n  |         |\n  |\n  "
+           "|\n  |\n=====",
+        5: "_______________\n  | /       |  \n  |/        |\n  |         O\n  |       __|__\n  |         |\n  |      "
+           "  /\n  |\n  |\n=====",
+        6: "_______________\n  | /       |  \n  |/        |\n  |         O\n  |       __|__\n  |         |\n  |      "
+           "  / \ \n  |\n  |\n=====",
+        7: "_______________\n  | /       |  \n  |/        |\n  |         X\n  |       __|__\n  |         |\n  |      "
+           "  / \ \n  |\n  |\n=====",
+    }
+
+    print(options[num_of_incr_guesses])
 
 
 # function that picks a random word from a list of words from the SOWPODS dictionary
@@ -22,6 +45,7 @@ def pick_random_word():
     random_word = list_of_words[random_num].strip()
 
     return random_word
+
 
 # main function of the game
 def play_hangman():
@@ -49,7 +73,9 @@ def play_hangman():
     user_word_str = "".join(user_word_list)
 
     # welcome into the game and introduce length of the unknown secret word
-    print("Welcome to Hangman!\nThis is your secret word:")
+    print("Welcome to Hangman! Guess the word before your man gets hung!")
+    draw_hangman(guesses_counter)
+    print("This is your secret word:")
     print(user_word_str)
 
     # game logic - as long as user word isn't matching secret word and number of incorrect guesses has not be exceed
@@ -96,16 +122,17 @@ def play_hangman():
             guesses_counter += 1
             user_wrong_letters.append(user_letter)
 
-            # if the user still have moves/chances print according message and show how many more incorrect guesses
-            # he/she can make
+            # if the user still have moves print according message and draw a hangman
             if guesses_counter <= max_num_of_guesses:
-                print("No such letter! Try a different one.\nYou have {} (incorrect) guesses left.".format(
-                    max_num_of_guesses - guesses_counter))
+                draw_hangman(guesses_counter)
+                print("No such letter! Try a different one.")
 
-    # when user exceeds the amount of guesses he looses and appropriate message is shown + ask if want to play again
+    # when user exceeds the amount of incorrect guesses he looses; an appropriate message is shown and a dead hangman
+    # is drawn; finally ask if want to play again
     if guesses_counter > max_num_of_guesses:
-        print("You lost! You have reached the maximum number of incorrect guesses ({}).\nThe secret word was --> {} "
-              "<--\nWhy don't you try again? :)".format(max_num_of_guesses, secret_word))
+        draw_hangman(guesses_counter)
+        print("You lost! You have reached the maximum number of incorrect guesses.\nThe secret word was --> {} "
+              "<--\nWhy don't you try again? :)".format(secret_word))
     # otherwise he wins and so appropriate message is shown + ask if want to play again
     else:
         print("Congratulations, you won!\nFancy playing one more time?")
@@ -118,7 +145,7 @@ def play_hangman():
 
     # if want to play - resume the game
     if play_again == "1":
-        print("\n--------------------------\n")
+        print("\n---------------------------->>>  NEW GAME <<<----------------------------\n")
         return play_hangman()
     # otherwise say goodbye and end the game
     else:
