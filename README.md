@@ -1,5 +1,5 @@
 # Hangman
 
-This web page documents a computer implementation of a popular paper & pencil guessing game, Hangman, written in Python 3.
+This project is a computer implementation of a popular pen & paper Hangman guessing game along with its documentation.
 
-To view project's documentation click [here](http://monbird.com/hangman).
+To view completed project click [here](http://monbird.com/hangman).
